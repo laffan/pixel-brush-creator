@@ -1,0 +1,183 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+nav {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    overflow: hidden;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.size-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+input[type="number"] {
+    width: 40px;
+}
+
+.zoom-control {
+    width: 100px;
+}
+
+#zoomSlider {
+    width: 100%;
+}
+
+#previewContainer {
+    height: 200px;
+    border: 1px solid #000000;
+    margin-bottom: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+#previewCanvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#canvasContainer {
+    flex-grow: 1;
+    overflow: hidden;
+    border: 1px solid #000000;
+    position: relative;
+}
+
+#pixelCanvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: crosshair;
+}
+
+#previewContainer {
+    position: relative;
+}
+
+.color-pickers {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.color-pickers input[type="color"] {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: none;
+    margin-left: 5px;
+}
+
+#scaleDisplay {
+    margin-right: 10px;
+    color: #888;
+}
+
+@media (min-width: 768px) {
+    #previewContainer {
+        height: 300px;
+    }
+}
+
+/* ensures the increment/decrement arrows always display */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: inner-spin-button;
+  appearance: inner-spin-button;
+  opacity: 1;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.size-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+.step-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.step-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.step-btn:active {
+    background-color: #d0d0d0;
+}
+
+input[type="number"] {
+    width: 40px;
+    height: 30px;
+    text-align: center;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button, 
+input[type="number"]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+}
