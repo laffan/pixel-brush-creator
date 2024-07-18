@@ -36,6 +36,15 @@ function init() {
 
     canvas.style.touchAction = 'none';
 
+    // Update input elements with current values and max
+    const widthInput = document.getElementById('canvasWidth');
+    const heightInput = document.getElementById('canvasHeight');
+
+    widthInput.value = canvasSize.width;
+    heightInput.value = canvasSize.height;
+
+    widthInput.max = canvasMax;
+    heightInput.max = canvasMax;
 
     initializePixelData();
     setupEventListeners();
@@ -189,7 +198,7 @@ function drawCanvas() {
     });
     
     // Draw the 2px black border around the central tile
-    ctx.strokeStyle = '#000000';
+    ctx.strokeStyle = '#E02020';
     ctx.lineWidth = 2;
     ctx.strokeRect(x, y, width, height);
 }
