@@ -11,24 +11,21 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 10px 20px;
     background-color: #f0f0f0;
 }
 
 h1 {
     margin: 0;
-    font-size: 1.2em;
+    font-size: 1.5em;
 }
 
-nav {
-    display: flex;
-    gap: 10px;
-}
-
-button {
-    background-color: #ffffff;
-    border: 1px solid #000000;
+nav button {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     padding: 5px 10px;
+    margin-left: 5px;
     cursor: pointer;
 }
 
@@ -36,72 +33,29 @@ main {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    padding: 10px;
-    overflow: hidden;
-}
-
-.controls {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.size-controls {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-input[type="number"] {
-    width: 40px;
-}
-
-.zoom-control {
-    width: 100px;
-}
-
-#zoomSlider {
-    width: 100%;
+    padding: 20px;
 }
 
 #previewContainer {
-    height: 200px;
-    border: 1px solid #000000;
-    margin-bottom: 10px;
-    overflow: hidden;
     position: relative;
+    width: 100%;
+    height: 200px;
+    margin-bottom: 20px;
 }
 
 #previewCanvas {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ccc;
+}
+
+.preview-controls {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-#canvasContainer {
-    flex-grow: 1;
-    overflow: hidden;
-    border: 1px solid #000000;
-    position: relative;
-}
-
-#pixelCanvas {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    cursor: crosshair;
-}
-
-#previewContainer {
-    position: relative;
-}
-
-.color-pickers {
-    position: absolute;
-    bottom: 10px;
+    top: 10px;
+    left: 10px;
     right: 10px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .color-pickers input[type="color"] {
@@ -109,75 +63,75 @@ input[type="number"] {
     height: 30px;
     padding: 0;
     border: none;
-    margin-left: 5px;
+    border-radius: 50%;
+    margin-right: 5px;
+    cursor: pointer;
 }
 
-#scaleDisplay {
+.zoom-control {
+    background: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.zoom-control input[type="range"] {
+    width: 100px;
     margin-right: 10px;
-    color: #888;
 }
 
-@media (min-width: 768px) {
-    #previewContainer {
-        height: 300px;
-    }
-}
-
-/* ensures the increment/decrement arrows always display */
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-  -webkit-appearance: inner-spin-button;
-  appearance: inner-spin-button;
-  opacity: 1;
-}
-
-input[type=number] {
-  -moz-appearance: textfield;
-  appearance: textfield;
+.editor-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
 .size-controls {
     display: flex;
     align-items: center;
-    gap: 10px;
-}
-
-.input-group {
-    display: flex;
-    align-items: center;
+    font-size: 0.9em;
 }
 
 .step-btn {
-    width: 30px;
-    height: 30px;
-    font-size: 18px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 25px;
+    height: 25px;
     background-color: #f0f0f0;
-    border: 1px solid #ccc;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
+    margin: 0 2px;
 }
 
-.step-btn:hover {
-    background-color: #e0e0e0;
+.size-controls input[type="number"] {
+    width: 40px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
-.step-btn:active {
-    background-color: #d0d0d0;
+#canvasContainer {
+    width: 100%;
+    height: calc(100vh - 400px); /* Adjust based on your layout */
+    position: relative;
+    border: 1px solid #ccc;
+}
+
+#pixelCanvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Ensure inputs don't have browser styles */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 input[type="number"] {
-    width: 40px;
-    height: 30px;
-    text-align: center;
-    font-size: 16px;
-    border: 1px solid #ccc;
     -moz-appearance: textfield;
-}
-
-input[type="number"]::-webkit-inner-spin-button, 
-input[type="number"]::-webkit-outer-spin-button { 
-    -webkit-appearance: none; 
-    margin: 0; 
 }
