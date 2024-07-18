@@ -11,7 +11,8 @@ let previewColors = {
 
 let pixelData = [];
 let previewData = [];
-let canvasSize = { width: 6, height: 6 };
+let canvasSize = { width: 10, height: 10 };
+let canvasMax = 20;
 
 let isDrawing = false;
 let isDragging = false;
@@ -173,7 +174,11 @@ function drawCanvas() {
                 const pixelY = area.y + (py * pixelSize);
                 
                 if (pixelX >= 0 && pixelX < canvas.width && pixelY >= 0 && pixelY < canvas.height) {
-                    ctx.fillStyle = pixelData[py][px] ? '#000000' : '#ffffff';
+                    if (previewData[py][px]) {
+                        ctx.fillStyle = pixelData[py][px] ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)';
+                    } else {
+                        ctx.fillStyle = pixelData[py][px] ? '#000000' : '#ffffff';
+                    }
                     ctx.fillRect(pixelX, pixelY, pixelSize, pixelSize);
                     
                     ctx.strokeStyle = '#cccccc';
@@ -297,6 +302,16 @@ function stopDrawing() {
     updatePreview();
 }
 
+function applyDragPreview() {
+    for (let y = 0; y < canvasSize.height; y++) {
+        for (let x = 0; x < canvasSize.width; x++) {
+            if (previewData[y][x]) {
+                pixelData[y][x] = 1 - dragStartColor;
+            }
+        }
+    }
+}
+
 
 function cancelDrawing() {
     clearTimeout(holdTimer);
@@ -349,15 +364,18 @@ function updateDragPreview() {
     drawCanvas();
 }
 
-
 function setPreviewPixel(x, y) {
-    if (x < 0 || x >= canvasSize.width || y < 0 || y >= canvasSize.height) return;
+    x = (x + canvasSize.width) % canvasSize.width;
+    y = (y + canvasSize.height) % canvasSize.height;
     previewData[y][x] = 1;
 }
 
 function clearPreviewData() {
     previewData = Array(canvasSize.height).fill().map(() => Array(canvasSize.width).fill(0));
 }
+
+
+
 
 function applyDragPreview() {
     const newColor = 1 - dragStartColor;
@@ -381,7 +399,7 @@ function updateCanvasSize() {
     const newWidth = parseInt(document.getElementById('canvasWidth').value);
     const newHeight = parseInt(document.getElementById('canvasHeight').value);
 
-    if (newWidth >= 1 && newWidth <= 15 && newHeight >= 1 && newHeight <= 15) {
+    if (newWidth >= 1 && newWidth <= canvasMax && newHeight >= 1 && newHeight <= canvasMax) {
         const blackPixels = getBlackPixels();
         const oldCenter = {
             x: Math.floor(canvasSize.width / 2),
@@ -494,7 +512,7 @@ function handleFileUpload(e) {
         reader.onload = function(event) {
             const img = new Image();
             img.onload = function() {
-                if (img.width <= 15 && img.height <= 15) {
+                if (img.width <= canvasMax && img.height <= canvasMax) {
                     canvasSize.width = img.width;
                     canvasSize.height = img.height;
                     initializePixelData();
@@ -518,7 +536,7 @@ function handleFileUpload(e) {
                     document.getElementById('canvasWidth').value = canvasSize.width;
                     document.getElementById('canvasHeight').value = canvasSize.height;
                 } else {
-                    alert('Image dimensions must be 15x15 or smaller.');
+                    alert('Image dimensions must be canvasMaxxcanvasMax or smaller.');
                 }
             };
             img.src = event.target.result;
