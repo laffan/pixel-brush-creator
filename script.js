@@ -8,6 +8,7 @@ let previewColors = {
     black: '#000000',
     white: '#ffffff'
 };
+let editorZoomLevel = 1;
 
 let pixelData = [];
 let previewData = [];
@@ -36,6 +37,12 @@ function init() {
 
     canvas.style.touchAction = 'none';
 
+    // Define canvasMax
+    const canvasMax = 15;
+
+    // Set initial canvas size
+    canvasSize = { width: 6, height: 6 };
+
     // Update input elements with current values and max
     const widthInput = document.getElementById('canvasWidth');
     const heightInput = document.getElementById('canvasHeight');
@@ -48,6 +55,14 @@ function init() {
 
     initializePixelData();
     setupEventListeners();
+
+    // Set up editor zoom slider
+    const editorZoomSlider = document.getElementById('editorZoomSlider');
+    editorZoomSlider.addEventListener('input', handleEditorZoom);
+    
+    // Initialize editor zoom
+    handleEditorZoom({ target: { value: editorZoomSlider.value } });
+
     resizeCanvas();
     drawCanvas();
     updatePreview();
@@ -130,77 +145,93 @@ function resizeCanvas() {
     const containerWidth = container.clientWidth;
     const containerHeight = container.clientHeight;
     
-    // Calculate the size of the central tile (1/2 of the smaller dimension)
-    const centralTileSize = Math.floor(Math.min(containerWidth, containerHeight) / 2);
+    // Calculate the size to fit the 3x3 grid at minimum zoom
+    const minTileSize = Math.min(containerWidth / 3, containerHeight / 3);
     
-    // Calculate the pixel size based on the central tile and canvas size
-    pixelSize = Math.floor(centralTileSize / Math.max(canvasSize.width, canvasSize.height));
+    // Calculate the size to fit the largest dimension of the primary instance at maximum zoom
+    const maxTileSize = Math.min(containerWidth, containerHeight);
     
-    // Calculate the actual size of the central tile
-    const tileWidth = canvasSize.width * pixelSize;
-    const tileHeight = canvasSize.height * pixelSize;
+    // Calculate the current tile size based on the zoom level
+    const currentTileSize = minTileSize + (maxTileSize - minTileSize) * (editorZoomLevel - 1);
     
-    // Set the canvas size to cover the entire container
+    // Calculate pixel size
+    pixelSize = Math.floor(currentTileSize / Math.max(canvasSize.width, canvasSize.height));
+    
+    // Set the canvas size
     canvas.width = containerWidth;
     canvas.height = containerHeight;
     
+    // Calculate the size of a single instance
+    const instanceWidth = canvasSize.width * pixelSize;
+    const instanceHeight = canvasSize.height * pixelSize;
+    
     // Store the repeatable area information for later use
     canvas.repeatableArea = {
-        width: tileWidth,
-        height: tileHeight,
-        x: (containerWidth - tileWidth) / 2,
-        y: (containerHeight - tileHeight) / 2,
-        halfWidth: tileWidth / 2,
-        halfHeight: tileHeight / 2
+        width: instanceWidth,
+        height: instanceHeight,
+        x: Math.round((containerWidth - instanceWidth) / 2),
+        y: Math.round((containerHeight - instanceHeight) / 2)
     };
 
     drawCanvas();
     updatePreview();
 }
 
+
+
+
+
+
+
 function drawCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     const { width, height, x, y } = canvas.repeatableArea;
     
-    // Define the areas to draw (central tile and surrounding tiles)
-    const areas = [
-        { x: x - width, y: y - height },
-        { x: x, y: y - height },
-        { x: x + width, y: y - height },
-        { x: x - width, y: y },
-        { x: x, y: y },
-        { x: x + width, y: y },
-        { x: x - width, y: y + height },
-        { x: x, y: y + height },
-        { x: x + width, y: y + height }
-    ];
-
-    areas.forEach(area => {
-        for (let py = 0; py < canvasSize.height; py++) {
-            for (let px = 0; px < canvasSize.width; px++) {
-                const pixelX = area.x + (px * pixelSize);
-                const pixelY = area.y + (py * pixelSize);
-                
-                if (pixelX >= 0 && pixelX < canvas.width && pixelY >= 0 && pixelY < canvas.height) {
-                    if (previewData[py][px]) {
-                        ctx.fillStyle = pixelData[py][px] ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)';
-                    } else {
-                        ctx.fillStyle = pixelData[py][px] ? '#000000' : '#ffffff';
-                    }
-                    ctx.fillRect(pixelX, pixelY, pixelSize, pixelSize);
-                    
-                    ctx.strokeStyle = '#cccccc';
-                    ctx.strokeRect(pixelX, pixelY, pixelSize, pixelSize);
-                }
-            }
+    // Calculate how many instances we need to draw in each direction
+    const instancesX = Math.ceil(canvas.width / width) + 2;
+    const instancesY = Math.ceil(canvas.height / height) + 2;
+    
+    // Calculate the offset to start drawing instances
+    const startX = x - Math.floor(instancesX / 2) * width;
+    const startY = y - Math.floor(instancesY / 2) * height;
+    
+    // Draw instances
+    for (let iy = 0; iy < instancesY; iy++) {
+        for (let ix = 0; ix < instancesX; ix++) {
+            const drawX = startX + ix * width;
+            const drawY = startY + iy * height;
+            drawInstance(drawX, drawY);
         }
-    });
+    }
     
     // Draw the 2px black border around the central tile
-    ctx.strokeStyle = '#E02020';
+    ctx.strokeStyle = '#000000';
     ctx.lineWidth = 2;
     ctx.strokeRect(x, y, width, height);
+}
+
+function drawInstance(startX, startY) {
+    for (let py = 0; py < canvasSize.height; py++) {
+        for (let px = 0; px < canvasSize.width; px++) {
+            const pixelX = startX + px * pixelSize;
+            const pixelY = startY + py * pixelSize;
+            
+            // Only draw pixels that are within the canvas bounds
+            if (pixelX + pixelSize > 0 && pixelX < canvas.width && 
+                pixelY + pixelSize > 0 && pixelY < canvas.height) {
+                if (previewData && previewData[py] && previewData[py][px]) {
+                    ctx.fillStyle = pixelData[py][px] ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)';
+                } else {
+                    ctx.fillStyle = pixelData[py][px] ? '#000000' : '#ffffff';
+                }
+                ctx.fillRect(pixelX, pixelY, pixelSize, pixelSize);
+                
+                ctx.strokeStyle = '#cccccc';
+                ctx.strokeRect(pixelX, pixelY, pixelSize, pixelSize);
+            }
+        }
+    }
 }
 
 function drawPixel(x, y) {
@@ -478,6 +509,10 @@ function updateScaleDisplay() {
     document.getElementById('scaleDisplay').textContent = `1:${zoomLevel}`;
 }
 
+function updateEditorScaleDisplay() {
+    document.getElementById('editorScaleDisplay').textContent = `1:${editorZoomLevel.toFixed(2)}`;
+}
+
 function updatePreviewColors(e) {
     if (e.target.id === 'blackColorPicker') {
         previewColors.black = e.target.value;
@@ -525,6 +560,23 @@ function updatePreview() {
 
 function triggerFileInput() {
     document.getElementById('fileInput').click();
+}
+
+
+function handleEditorZoom(e) {
+    const zoomValue = parseInt(e.target.value);
+    const minZoom = 0.9; // Slightly less than 1 to ensure full bleed at minimum zoom
+    const maxZoom = 2.1; // Slightly more than 2 to ensure full bleed at maximum zoom
+
+    editorZoomLevel = minZoom + (zoomValue / 100) * (maxZoom - minZoom);
+    
+    updateEditorScaleDisplay();
+    resizeCanvas();
+    drawCanvas();
+}
+
+function updateEditorScaleDisplay() {
+    document.getElementById('editorScaleDisplay').textContent = `1:${editorZoomLevel.toFixed(2)}`;
 }
 
 function handleFileUpload(e) {
