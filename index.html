@@ -12,8 +12,8 @@
   <header>
     <h1>Pixel Brush Creator</h1>
     <nav>
-      <button id="helpLink" aria-label="Help">?</button>
-      <button id="invertBtn" aria-label="Invert">I</button>
+      <button id="helpLink" aria-label="Help"><a href="https://github.com/laffan/pixel-brush-creator/blob/main/README.md">?</a></button>
+      <button id="invertBtn" aria-label="Invert">◓</button>
       <button id="uploadBtn" aria-label="Upload">↑</button>
       <button id="downloadBtn" aria-label="Download">↓</button>
     </nav>
@@ -41,13 +41,18 @@
 
     <div class="editor-controls">
       <div class="size-controls">
-        <button class="step-btn" data-action="decrement" data-input="canvasWidth">-</button>
-        <input type="number" id="canvasWidth" min="1" max="25" value="10" step="1">
-        <button class="step-btn" data-action="increment" data-input="canvasWidth">+</button>
-        <span>x</span>
-        <button class="step-btn" data-action="decrement" data-input="canvasHeight">-</button>
-        <input type="number" id="canvasHeight" min="1" max="25" value="10" step="1">
-        <button class="step-btn" data-action="increment" data-input="canvasHeight">+</button>
+        <div class="size-control-single">
+
+          <button class="step-btn" data-action="decrement" data-input="canvasWidth">-</button>
+          <input type="number" id="canvasWidth" min="1" max="25" value="10" step="1">
+          <button class="step-btn" data-action="increment" data-input="canvasWidth">+</button>
+        </div>
+        <span class="size-control-x">x</span>
+        <div class="size-control-single">
+          <button class="step-btn" data-action="decrement" data-input="canvasHeight">-</button>
+          <input type="number" id="canvasHeight" min="1" max="25" value="10" step="1">
+          <button class="step-btn" data-action="increment" data-input="canvasHeight">+</button>
+        </div>
       </div>
       <div class="zoom-control">
         <input type="range" id="editorZoomSlider" min="1" max="100" value="50">

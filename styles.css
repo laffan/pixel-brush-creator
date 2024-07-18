@@ -17,7 +17,7 @@ header {
 
 h1 {
   margin: 0;
-  font-size: 1.5em;
+  font-size: 1em;
 }
 
 nav button {
@@ -27,6 +27,11 @@ nav button {
   padding: 5px 10px;
   margin-left: 5px;
   cursor: pointer;
+}
+
+#helpLink a {
+  text-decoration: none;
+  color: black;
 }
 
 main {
@@ -79,15 +84,13 @@ main {
 
 .zoom-control {
   background: white;
-  padding: 5px 10px;
+  padding: 5px 10px 5px 10px;
   border-radius: 15px;
   display: flex;
-  align-items: center;
 }
 
 .zoom-control input[type="range"] {
-  width: 100px;
-  margin-right: 10px;
+  vertical-align: middle;
 }
 
 .editor-controls {
@@ -104,22 +107,48 @@ main {
 }
 
 .step-btn {
-  width: 25px;
-  height: 25px;
   background-color: #f0f0f0;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
-  margin: 0 2px;
+}
+
+.size-control-single > * {
+  height: 25px;
+  width: 25px;
+  background: #eeeeee;
+  margin: 0;
+}
+
+.size-control-single {
+  display: flex;
+}
+
+.size-control-single .step-btn[data-action="decrement"] {
+  border: 1px solid #000;
+  border-radius: 50% 0 0 50%;
+}
+.size-control-single .step-btn[data-action="increment"] {
+  border: 1px solid #000;
+  border-radius: 0 50% 50% 0;
 }
 
 .size-controls input[type="number"] {
-  width: 40px;
   text-align: center;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: none;
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
 }
 
+.size-control-x {
+  margin: 0 10px;
+  font-size: 15px;
+  opacity: 0.3;
+}
+#scaleDisplay,
+#editorScaleDisplay {
+  display: none;
+}
 #canvasContainer {
   width: 100%;
   height: calc(100vh - 400px); /* Adjust based on your layout */
