@@ -120,13 +120,29 @@ function resizeCanvas() {
     const containerWidth = container.clientWidth;
     const containerHeight = container.clientHeight;
     
-    pixelSize = Math.min(
-        Math.floor(containerWidth / canvasSize.width),
-        Math.floor(containerHeight / canvasSize.height)
-    );
-
-    canvas.width = canvasSize.width * pixelSize;
-    canvas.height = canvasSize.height * pixelSize;
+    // Calculate the size of the central tile (1/2 of the smaller dimension)
+    const centralTileSize = Math.floor(Math.min(containerWidth, containerHeight) / 2);
+    
+    // Calculate the pixel size based on the central tile and canvas size
+    pixelSize = Math.floor(centralTileSize / Math.max(canvasSize.width, canvasSize.height));
+    
+    // Calculate the actual size of the central tile
+    const tileWidth = canvasSize.width * pixelSize;
+    const tileHeight = canvasSize.height * pixelSize;
+    
+    // Set the canvas size to cover the entire container
+    canvas.width = containerWidth;
+    canvas.height = containerHeight;
+    
+    // Store the repeatable area information for later use
+    canvas.repeatableArea = {
+        width: tileWidth,
+        height: tileHeight,
+        x: (containerWidth - tileWidth) / 2,
+        y: (containerHeight - tileHeight) / 2,
+        halfWidth: tileWidth / 2,
+        halfHeight: tileHeight / 2
+    };
 
     drawCanvas();
     updatePreview();
@@ -135,11 +151,42 @@ function resizeCanvas() {
 function drawCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    for (let y = 0; y < canvasSize.height; y++) {
-        for (let x = 0; x < canvasSize.width; x++) {
-            drawPixel(x, y);
+    const { width, height, x, y } = canvas.repeatableArea;
+    
+    // Define the areas to draw (central tile and surrounding tiles)
+    const areas = [
+        { x: x - width, y: y - height },
+        { x: x, y: y - height },
+        { x: x + width, y: y - height },
+        { x: x - width, y: y },
+        { x: x, y: y },
+        { x: x + width, y: y },
+        { x: x - width, y: y + height },
+        { x: x, y: y + height },
+        { x: x + width, y: y + height }
+    ];
+
+    areas.forEach(area => {
+        for (let py = 0; py < canvasSize.height; py++) {
+            for (let px = 0; px < canvasSize.width; px++) {
+                const pixelX = area.x + (px * pixelSize);
+                const pixelY = area.y + (py * pixelSize);
+                
+                if (pixelX >= 0 && pixelX < canvas.width && pixelY >= 0 && pixelY < canvas.height) {
+                    ctx.fillStyle = pixelData[py][px] ? '#000000' : '#ffffff';
+                    ctx.fillRect(pixelX, pixelY, pixelSize, pixelSize);
+                    
+                    ctx.strokeStyle = '#cccccc';
+                    ctx.strokeRect(pixelX, pixelY, pixelSize, pixelSize);
+                }
+            }
         }
-    }
+    });
+    
+    // Draw the 2px black border around the central tile
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x, y, width, height);
 }
 
 function drawPixel(x, y) {
@@ -157,10 +204,10 @@ function drawPixel(x, y) {
 
 function startDrawing(e) {
     isDrawing = true;
-    const { x, y } = getPixelCoords(e);
-    startPixel = { x, y };
-    currentPixel = { x, y };
-    dragStartColor = pixelData[y][x];
+    const coords = getPixelCoords(e);
+    startPixel = coords;
+    currentPixel = coords;
+    dragStartColor = pixelData[coords.y][coords.x];
 
     // Start the hold timer
     holdTimer = setTimeout(() => {
@@ -172,7 +219,7 @@ function startDrawing(e) {
     }, holdDuration);
 
     // Immediately toggle the first pixel
-    togglePixel(x, y);
+    togglePixel(coords.x, coords.y);
 }
 
 function handleTouchStart(e) {
@@ -205,17 +252,17 @@ function handleTouchEnd(e) {
 function handleMouseMove(e) {
     if (!isDrawing) return;
 
-    const { x, y } = getPixelCoords(e);
+    const coords = getPixelCoords(e);
     
-    if (x !== currentPixel.x || y !== currentPixel.y) {
-        currentPixel = { x, y };
+    if (coords.x !== currentPixel.x || coords.y !== currentPixel.y) {
+        currentPixel = coords;
 
         if (isHoldingForLine) {
             // Update the line preview
             updateDragPreview();
         } else {
             // Paint individual pixels
-            togglePixel(x, y);
+            togglePixel(coords.x, coords.y);
         }
     }
 }
@@ -265,9 +312,20 @@ function cancelDrawing() {
 
 function getPixelCoords(e) {
     const rect = canvas.getBoundingClientRect();
-    const x = Math.floor((e.clientX - rect.left) / pixelSize);
-    const y = Math.floor((e.clientY - rect.top) / pixelSize);
-    return { x, y };
+    const { width, height, x: areaX, y: areaY } = canvas.repeatableArea;
+    
+    const mouseX = e.clientX - rect.left - areaX;
+    const mouseY = e.clientY - rect.top - areaY;
+    
+    // Calculate the position relative to the central tile
+    const relativeX = (mouseX + width) % width;
+    const relativeY = (mouseY + height) % height;
+    
+    // Convert to pixel coordinates
+    const pixelX = Math.floor(relativeX / pixelSize);
+    const pixelY = Math.floor(relativeY / pixelSize);
+    
+    return { x: pixelX, y: pixelY };
 }
 
 function updateDragPreview() {
@@ -315,8 +373,8 @@ function applyDragPreview() {
 function togglePixel(x, y) {
     if (x < 0 || x >= canvasSize.width || y < 0 || y >= canvasSize.height) return;
 
-    pixelData[y][x] = 1 - dragStartColor;
-    drawPixel(x, y);
+    pixelData[y][x] = 1 - pixelData[y][x];
+    drawCanvas();
 }
 
 function updateCanvasSize() {
