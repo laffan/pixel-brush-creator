@@ -225,11 +225,11 @@ function startDrawing(e) {
 
     // Start the hold timer
     holdTimer = setTimeout(() => {
-        isHoldingForLine = true;
-        // Clear any existing preview data
-        clearPreviewData();
-        // Start showing the line preview
-        updateDragPreview();
+        if (currentPixel.x === startPixel.x && currentPixel.y === startPixel.y) {
+            isHoldingForLine = true;
+            clearPreviewData();
+            updateDragPreview();
+        }
     }, holdDuration);
 
     // Immediately toggle the first pixel
@@ -271,12 +271,14 @@ function handleMouseMove(e) {
     if (coords.x !== currentPixel.x || coords.y !== currentPixel.y) {
         currentPixel = coords;
 
-        if (isHoldingForLine) {
-            // Update the line preview
-            updateDragPreview();
-        } else {
+        if (!isHoldingForLine) {
+            // If we've moved before the hold timer completes, cancel the timer
+            clearTimeout(holdTimer);
             // Paint individual pixels
             togglePixel(coords.x, coords.y);
+        } else {
+            // Update the line preview
+            updateDragPreview();
         }
     }
 }
@@ -356,20 +358,31 @@ function updateDragPreview() {
     clearPreviewData();
     const x0 = startPixel.x, y0 = startPixel.y;
     const x1 = currentPixel.x, y1 = currentPixel.y;
+    
+    // Use Bresenham's line algorithm for more accurate line drawing
     const dx = Math.abs(x1 - x0);
     const dy = Math.abs(y1 - y0);
-    const sx = (x0 < x1) ? 1 : -1;
-    const sy = (y0 < y1) ? 1 : -1;
+    const sx = x0 < x1 ? 1 : -1;
+    const sy = y0 < y1 ? 1 : -1;
     let err = dx - dy;
 
-    let x = x0, y = y0;
+    let x = x0;
+    let y = y0;
+
     while (true) {
         setPreviewPixel(x, y);
         if (x === x1 && y === y1) break;
         const e2 = 2 * err;
-        if (e2 > -dy) { err -= dy; x += sx; }
-        if (e2 < dx) { err += dx; y += sy; }
+        if (e2 > -dy) {
+            err -= dy;
+            x += sx;
+        }
+        if (e2 < dx) {
+            err += dx;
+            y += sy;
+        }
     }
+
     drawCanvas();
 }
 
