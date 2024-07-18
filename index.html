@@ -1,59 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Brush Creator</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Brush Creator</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <header>
-        <h1>Pixel Brush Creator</h1>
-        <nav>
-            <button id="helpLink" aria-label="Help">?</button>
-            <button id="invertBtn" aria-label="Invert">I</button>
-            <button id="uploadBtn" aria-label="Upload">↑</button>
-            <button id="downloadBtn" aria-label="Download">↓</button>
-        </nav>
-    </header>
-    
-    <main>
-        <div id="previewContainer">
-            <canvas id="previewCanvas"></canvas>
-            <div class="preview-controls">
-                <div class="color-pickers">
-                    <input type="color" id="blackColorPicker" value="#000000">
-                    <input type="color" id="whiteColorPicker" value="#ffffff">
-                </div>
-                <div class="zoom-control">
-                    <input type="range" id="zoomSlider" min="2" max="20" value="4">
-                    <span id="scaleDisplay">1:4</span>
-                </div>
-            </div>
-        </div>
+  <header>
+    <h1>Pixel Brush Creator</h1>
+    <nav>
+      <button id="helpLink" aria-label="Help">?</button>
+      <button id="invertBtn" aria-label="Invert">I</button>
+      <button id="uploadBtn" aria-label="Upload">↑</button>
+      <button id="downloadBtn" aria-label="Download">↓</button>
+    </nav>
+  </header>
 
-        <div class="editor-controls">
-            <div class="size-controls">
-                <button class="step-btn" data-action="decrement" data-input="canvasWidth">-</button>
-                <input type="number" id="canvasWidth" min="1" max="15" value="6" step="1">
-                <button class="step-btn" data-action="increment" data-input="canvasWidth">+</button>
-                <span>x</span>
-                <button class="step-btn" data-action="decrement" data-input="canvasHeight">-</button>
-                <input type="number" id="canvasHeight" min="1" max="15" value="6" step="1">
-                <button class="step-btn" data-action="increment" data-input="canvasHeight">+</button>
-            </div>
-            <div class="zoom-control">
-                <input type="range" id="editorZoomSlider" min="1" max="100" value="50">
-                <span id="editorScaleDisplay">1:1</span>
-            </div>
-        </div>
-        <div id="canvasContainer">
-            <canvas id="pixelCanvas"></canvas>
-        </div>
-    </main>
+  <main>
+    <div id="previewContainer">
+      <canvas id="previewCanvas"></canvas>
+      <div class="preview-controls">
+        <div class="color-pickers">
+          <div class="color-picker-container">
 
-    <input type="file" id="fileInput" style="display: none;">
+            <input type="color" id="blackColorPicker" value="#A2A2A2">
+          </div>
+          <div class="color-picker-container">
+            <input type="color" id="whiteColorPicker" value="#D8D8D8">
+          </div>
+        </div>
+        <div class="zoom-control">
+          <input type="range" id="zoomSlider" min="2" max="20" value="4">
+          <span id="scaleDisplay">1:4</span>
+        </div>
+      </div>
+    </div>
 
-    <script src="script.js"></script>
+    <div class="editor-controls">
+      <div class="size-controls">
+        <button class="step-btn" data-action="decrement" data-input="canvasWidth">-</button>
+        <input type="number" id="canvasWidth" min="1" max="25" value="10" step="1">
+        <button class="step-btn" data-action="increment" data-input="canvasWidth">+</button>
+        <span>x</span>
+        <button class="step-btn" data-action="decrement" data-input="canvasHeight">-</button>
+        <input type="number" id="canvasHeight" min="1" max="25" value="10" step="1">
+        <button class="step-btn" data-action="increment" data-input="canvasHeight">+</button>
+      </div>
+      <div class="zoom-control">
+        <input type="range" id="editorZoomSlider" min="1" max="100" value="50">
+        <span id="editorScaleDisplay">1:1</span>
+      </div>
+    </div>
+    <div id="canvasContainer">
+      <canvas id="pixelCanvas"></canvas>
+    </div>
+  </main>
+
+  <input type="file" id="fileInput" style="display: none;">
+
+  <script src="script.js"></script>
 </body>
+
 </html>
