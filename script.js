@@ -206,7 +206,7 @@ function drawCanvas() {
     }
     
     // Draw the 2px black border around the central tile
-    ctx.strokeStyle = '#000000';
+    ctx.strokeStyle = 'red';
     ctx.lineWidth = 2;
     ctx.strokeRect(x, y, width, height);
 }
