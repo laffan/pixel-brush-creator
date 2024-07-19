@@ -12,8 +12,8 @@ let editorZoomLevel = 1;
 
 let pixelData = [];
 let previewData = [];
-let canvasSize = { width: 10, height: 10 };
-let canvasMax = 20;
+let canvasSize = { width: 20, height: 20 };
+let canvasMax = 50;
 
 let isDrawing = false;
 let isDragging = false;
@@ -34,12 +34,6 @@ function init() {
   previewCtx = previewCanvas.getContext("2d");
 
   canvas.style.touchAction = "none";
-
-  // Define canvasMax
-  const canvasMax = 15;
-
-  // Set initial canvas size
-  canvasSize = { width: 10, height: 10 };
 
   // Update input elements with current values and max
   const widthInput = document.getElementById("canvasWidth");
