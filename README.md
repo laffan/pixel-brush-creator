@@ -1,10 +1,10 @@
 # Procreate Pattern Creator
 
-Create PNG textures for pixel brushes in Procreate.
+Create pixel textures for dither brushes in Procreate.
 
 ## To Use
 
-<a href="https://github.com/laffan/pixel-brush-creator/raw/main/Pixel_Brushes.brushset" download="true">1. Download this minimal pixel brush set.</a>
+1. Download <a href="https://github.com/laffan/pixel-brush-creator/raw/main/Pixel_Brushes.brushset" download="true">this minimal pixel brush set.</a>
 
 2. Create a pattern using the tool and click the "ꜜ" button.
 
