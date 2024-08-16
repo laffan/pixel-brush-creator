@@ -19,7 +19,7 @@ Create pixel textures for dither brushes in Procreate.
 7. Click "Import" and then "Paste"
 
 
-That's it! Now you have a custom texture pixel texture brush.
+That's it! Now you have a custom pixel texture brush.
 
 
 ## Credits
