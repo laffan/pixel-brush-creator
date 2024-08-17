@@ -1,4 +1,4 @@
-# Procreate Pattern Creator
+# Pixel Pattern Creator
 
 A tool to create pixel textures for brush creation in Procreate.
 
