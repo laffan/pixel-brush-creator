@@ -4,7 +4,7 @@ A tool to create pixel textures for brush creation in Procreate.
 
 ## To Use
 
-1. Download <a href="https://github.com/laffan/pixel-brush-creator/raw/main/Pixel_Brushes.brushset" download="true">this minimal pixel brush set.</a>
+1. Download <a href="https://github.com/laffan/pixel-brush-creator/raw/main/Pixel_Brushes.brushset" download="true">this minimal pixel brush set</a> for Procreate.
 
 2. Create a pattern using the tool and click the "ꜜ" button.
 
