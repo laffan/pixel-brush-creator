@@ -1,6 +1,6 @@
 # Procreate Pattern Creator
 
-Create pixel textures for dither brushes in Procreate.
+A tool to create pixel textures for brush creation in Procreate.
 
 ## To Use
 
