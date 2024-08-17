@@ -1,6 +1,6 @@
 # Pixel Pattern Creator
 
-A tool to create pixel textures for brush creation in Procreate.
+A tool to create pixel textures for brush creation in Procreate. [Try it out!](https://laffan.github.io/pixel-brush-creator/)
 
 ## To Use
 
